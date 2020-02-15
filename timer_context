@@ -71,7 +71,7 @@ class _AlarmClock(object):
     def remaining_time(self):
         return signal.getitimer(signal.ITIMER_REAL)[0]
 
-    def set_old_handler(self):
+    def _set_old_handler(self):
         if not self._old_handler:
             self._old_handler = signal.getsignal(signal.SIGALRM)
 
@@ -124,7 +124,7 @@ class _AlarmClock(object):
 
     def _set_alarm_signal(self, alarm):
         """Set an active Alarm"""
-        self.set_old_handler()
+        self._set_old_handler()
         signal.signal(signal.SIGALRM, self._timeout_handler)
         # NOTE: the precision is at integer level. It is not possible to set
         # a fraction of second.
@@ -220,7 +220,7 @@ class Timer(object):
 def print_time():
     # If the remainin time is 0.0, then the alarm clock is stopped.
     print('  --> Remaining time in running alarm: %s' %
-          signal.getitimer(signal.ITIMER_REAL)[0])
+          _AlarmClock().remaining_time)
 
 
 def wait_time():
